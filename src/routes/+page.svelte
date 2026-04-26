@@ -36,7 +36,7 @@
     };
 
     try {
-      const res = await fetch('http://localhost:5173/api/orders', {
+      const res = await fetch(`${data.apiBase}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
