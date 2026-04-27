@@ -1,10 +1,7 @@
 /** @type {import('./$types').PageLoad} */
 export async function load({ fetch, url }) {
   const userId = url.searchParams.get("user_id") || "guest";
-
-  // Пытаемся взять URL из заголовка или параметров (для гибкости)
-  // В Vercel лучше всего прописать PUBLIC_API_URL в Environment Variables
-  const API_BASE = "https://ваша-админка-на-vps.com"; // Замените на реальный адрес VPS
+  const API_BASE = "http://localhost:3000";
 
   try {
     const response = await fetch(`${API_BASE}/api/config?user_id=${userId}`);
@@ -18,12 +15,28 @@ export async function load({ fetch, url }) {
       apiBase: API_BASE,
     };
   } catch (err) {
-    console.error("API Error, using fallbacks");
     return {
       config: {
-        cities: ["Нячанг (Заглушка)"],
-        currencies: [{ id: "usdt", name: "USDT", rate: 25000, symbol: "₮" }],
-        methods: ["Наличные"],
+        pairs: [
+          {
+            id: "usdt_vnd",
+            name: "USDT на донги",
+            from: "USDT",
+            to: "VND",
+            rate: 25000,
+            min: 100,
+          },
+          {
+            id: "vnd_usdt",
+            name: "Донги на USDT",
+            from: "VND",
+            to: "USDT",
+            rate: 0.00004,
+            min: 2500000,
+          },
+        ],
+        paymentMethods: ["Наличные", "Перевод с банка"],
+        deliveryMethods: ["Курьером", "Переводом на счет", "По АТМ"],
         referral: { enabled: true, bonusAmount: 50000, isFirstOrder: true },
       },
       role: url.searchParams.get("role") || "user",

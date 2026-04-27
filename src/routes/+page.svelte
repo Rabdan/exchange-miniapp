@@ -3,8 +3,9 @@
     const { config, role, userId } = data;
     const isManager = role === "manager";
 
-    // Состояние формы
-    let pairId = config.pairs[0].id;
+    // Состояние формы с проверкой на наличие данных
+    let pairId =
+        config.pairs && config.pairs.length > 0 ? config.pairs[0].id : null;
     let giveAmount = "";
     let getAmount = "";
     let paymentMethod = config.paymentMethods[0]; // Наличные / Банк
@@ -124,7 +125,9 @@
         <label>Направление обмена</label>
         <select bind:value={pairId}>
             {#each config.pairs as p}
-                <option value={p.id}>{p.from} → {p.to}</option>
+                <option value={p.id}>
+                    {p.name || `${p.from} → ${p.to}`}
+                </option>
             {/each}
         </select>
     </div>
